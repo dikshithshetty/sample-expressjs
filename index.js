@@ -1,5 +1,9 @@
+const config = require('./config.js');
+var app = express();
+
+
+
 const express = require('express')
-const app = express()
 const port = process.env.PORT || 3000
 
 const startupMessage = `
@@ -21,7 +25,19 @@ const startupMessage = `
 [0m
 `
 
-app.get('/', (req, res) => res.send('Hello World!'))
+var indexRouter = express.Router();
+indexRouter.get('/', function(req, res) {
+	res.send('Hello World!');
+});
+
+var fooRouter = express.Router();
+fooRouter.get('/', function(req, res) {
+  res.send('Hello from foo');
+});
+
+indexRouter.use('/foo', fooRouter);
+
+app.use(config.baseUrl, indexRouter);
 
 for (let line of startupMessage.split("\n")) {
 	console.log(line)
